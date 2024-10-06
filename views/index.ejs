@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Clone</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h1 {
+            font-size: 24px;
+            color: #1DB954;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            padding: 10px 0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .sidebar li:hover {
+            color: #1DB954;
+        }
+
+        .sidebar button {
+            background-color: #1DB954;
+            border: none;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar button:hover {
+            background-color: #1ed760;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header .search-bar {
+            flex-grow: 1;
+            display: flex;
+        }
+
+        .header input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .header button {
+            background-color: #1DB954;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .header button:hover {
+            background-color: #1ed760;
+        }
+
+        .content-section {
+            margin-bottom: 20px;
+        }
+
+        .content-section h2 {
+            color: #1DB954;
+        }
+
+        .playlist {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            width: 150px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .play-button {
+            background-color: #1DB954;
+            color: #fff;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .play-button:hover {
+            background-color: #1ed760;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+
+        .modal-content input[type="text"], .modal-content input[type="file"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .modal-content button {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-content button:hover {
+            background-color: #1ed760;
+        }
+
+        .close {
+            cursor: pointer;
+            float: right;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1>Spotify</h1>
+        <ul>
+            <li>Home</li>
+            <li>Your Library</li>
+            <li>Recently Played</li>
+            <li>Create Playlist</li>
+        </ul>
+        <button id="openModalBtn">Add Music</button>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search for songs, artists, etc.">
+                <button>Search</button>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Featured Playlists</h2>
+            <div class="playlist" id="playlist">
+                <% songs.forEach(song => { %>
+                    <div class="card">
+                        <img src="<%= song.image %>" alt="<%= song.title %> cover" class="cover-image">
+                        <div class="title">
+                            <h4><%= song.title %></h4>
+                        </div>
+                        <div class="artist">
+                            <p><%= song.artist %></p>
+                        </div>
+                        <a href="/song/<%= song.id %>" class="play-button">Play</a>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Spotify | All Rights Reserved</p>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Music</h2>
+            <form id="musicForm" action="/upload" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div>
+                    <label for="artist">Artist:</label>
+                    <input type="text" id="artist" name="artist" required>
+                </div>
+                <div>
+                    <label for="musicFile">Upload Music File:</label>
+                    <input type="file" id="musicFile" name="songFile" accept="audio/*" required>
+                </div>
+                <div>
+                    <label for="coverImage">Upload Cover Image (Optional):</label>
+                    <input type="file" id="coverImage" name="imageFile" accept="image/*">
+                </div>
+                <div>
+                    <button type="submit">Add Music</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("openModalBtn");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "flex";
+        }
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
